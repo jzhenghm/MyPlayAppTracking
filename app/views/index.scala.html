@@ -1,0 +1,9 @@
+@(journal: Form[SearchJournalForm])(implicit messages: Messages)
+
+@import helper._
+
+
+@main("Welcome to Play"){@forms.sidebar(journal)}{
+	<script type='text/javascript' src='@routes.Assets.versioned("javascripts/index.js")'></script>
+	<!--  <ul id="journals"></ul>	-->
+}

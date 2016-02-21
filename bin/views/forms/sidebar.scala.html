@@ -1,0 +1,21 @@
+@(journal: Form[SearchJournalForm])(implicit messages: Messages)
+
+
+@import helper._
+
+	 @form(routes.JournalController.searchJournal()) {
+		@inputText(journal("app"), '_label -> "App", 'placeholder -> "-- all apps --")
+		@inputText(journal("version"), '_label -> "Version:",'placeholder -> "-- all version --")
+		@inputRadioGroup(journal("showOption"), 
+			options = Seq("A"->"all history", "C"->"current"), '_label -> "Show:")
+		@select(journal("env"), 
+			helper.options(List("prod","stage","qa","labs")),
+			'_label -> "Env.:", 
+			'_default -> "-- all env --")
+		@inputText(journal("username"), '_label -> "Deployer:", 'placeholder -> " --all deployer --")
+		@inputText(journal("date"), '_label -> "Date:", 'placeholder -> "-- all date --")
+	
+		<div class="buttons">
+			<input type="submit" value="Search"/>
+		</div>
+	}	

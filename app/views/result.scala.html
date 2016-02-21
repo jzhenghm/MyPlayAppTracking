@@ -1,0 +1,31 @@
+@(journalForm: Form[SearchJournalForm])(journals: Seq[Journal])(implicit messages: Messages)
+
+@import helper._
+
+@main("Search Result") {@forms.sidebar(journalForm)}{
+<script type='text/javascript' src='@routes.Assets.versioned("javascripts/index.js")'></script>
+  <table>
+  <col width="180">
+  <col width="80">
+  <col width="80">
+  <col width="80">
+  <col width="130">
+	<tr>
+		<th>App</th>
+		<th>Version</th>
+		<th>Env.</th>
+		<th>Deployer</th>
+		<th>Date</th>
+	</tr>
+	@for(entry <- journals) {
+	<tr>
+		<td>@entry.app</td>
+	    <td>@entry.version</td>
+	    <td>@entry.env</td>
+	    <td>@entry.username</td>
+	    <td>@entry.date</td>
+	</tr>
+	}
+  </table>
+
+}
