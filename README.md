@@ -4,9 +4,9 @@
 This is a web-based application to tracing applications deployed in the serveral environment: QA, stage, Labs, Production.
 The application is developed in Scala Playframework.
 
-* project is in playframework MVC pattern. The class packages are view, controller, model and data access layer. REST service endpoint is configured in the file `config\routes`
-* Relational database is the data storage of the application. in data access layer tables are mapped using Play Slick API.
-* For the demo purpose, I set H2 in-memory database as default configuration. when the application is started up DDL and the sample data insertion SQLs are executed with Play Evolution .
+* Th project is implemented in playframework MVC pattern. The class packages are view, controller, model and data access layer. REST service endpoint is configured in the file `config\routes`
+* Relational database is the data storage of the application. In the data access layer tables are mapped to Scala collection using Play Slick API.
+* For the demo purpose, I set H2 in-memory database as default configuration. when the application is started up database is initialized and sample data is inserted with Play Evolution. (see the scripts in `config\envolutions\default`)
 
 
 ## Build Project ##
@@ -50,4 +50,4 @@ I don't have project setup in Chef server to test this the update. but We can te
 `curl -X POST -H "Content-Type: application/json"
 -d '{"app":"e-commerce web","version":"0.1.2","env":"prod","username":"mack","date":"2016-02-01"}' http://localhost:9000/journal/add`
 
-To check the tracking application updated with the new insertion, we open web ui and search current deployment and we will see the lastest deployment is at the top of search result.
+To check the tracking application updated with the new insertion, we can search current deployment on web interface and we will see the lastest deployment we just added is at the top of search results.
