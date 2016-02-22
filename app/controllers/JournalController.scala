@@ -41,10 +41,23 @@ class JournalController @Inject() (repo: JournalRepository, val messagesApi: Mes
     Ok(views.html.index(journalForm))
   }
   
+  /**
+   * Returns a search result
+   */
   def result(journals: Seq[Journal]) = Action {
     Ok(views.html.result(journalForm)(journals))
   }
   
+  
+  /**
+   * a REST endpoint to add a new journal
+   * {{{
+   * curl -X POST -H "Content-Type: application/json" \
+   * -d '{"app":"e-commerce web","version":"0.1.2","env":"prod","username":"mack","date":"2016-02-01"}' \
+   * http://localhost:9000/journal/add
+   * }}}
+   * 
+   */
   def addJournal = Action(BodyParsers.parse.json) { request =>
     val b = request.body.validate[Journal]
     Logger(s"addJourna called $b")
@@ -54,60 +67,53 @@ class JournalController @Inject() (repo: JournalRepository, val messagesApi: Mes
       },
       journal => {
         Logger.info(journal.toString())
-        repo.add(journal)
-        repo.updateCurrentDeploy(journal.app, journal.env, journal.version)
+        repo.addNewJournal(journal)
         Logger.info("saved")
         Ok(Json.obj("status" -> "OK"))
       }
     )
   }
-
   
-  
+  /**
+   * A REST endpoint that search journal by a form
+   */
   def searchJournal = Action.async { implicit request =>
     journalForm.bindFromRequest.fold(
-      errorForm => {
-        Future.successful(Ok(views.html.index(errorForm)))
-      },
+      errorForm => {  Future.successful(Ok(views.html.index(errorForm))) },
       //      There were no errors in the from, so create the person.
       journal => {
         val date = journal.date match {
-          case x if x.length>0 => 
-             val dataFormat = new SimpleDateFormat("yyyy-MM-dd")
-             val date = dataFormat.parse(journal.date).getTime
-             Option(new java.sql.Date(date))
+          case x if x.length > 0 =>
+            val dataFormat = new SimpleDateFormat("yyyy-MM-dd")
+            val date = dataFormat.parse(journal.date).getTime
+            Option(new java.sql.Date(date))
           case _ => None
-          
+
         }
-        def strOption(str: String):Option[String] = str match {
-          case x if x.length>0 => Option(x)
-          case _ => None
+        def strOption(str: String): Option[String] = str match {
+          case x if x.length > 0 => Option(x)
+          case _                 => None
         }
-   
-        val journals = repo.search(strOption(journal.app), strOption(journal.version), 
-                                   strOption(journal.env), strOption(journal.username),
-                                   date, journal.showOption)
-                               
-         journals.map { x => Ok(views.html.result(journalForm)(x))
-      
-     
-        }
+
+        val journals = repo.search(strOption(journal.app), strOption(journal.version),
+          strOption(journal.env), strOption(journal.username),
+          date, journal.showOption)
+
+        journals.map { x => Ok(views.html.result(journalForm)(x)) }
 
       })
 
   } 
   
   /**
-   * A REST endpoint that gets all the people as JSON.
+   * A REST endpoint that gets all the journal as JSON.
    */
   def getJournals = Action.async {
-  	repo.list().map { journal =>  Ok(Json.toJson(journal))
-    }
+  	repo.list().map { journal =>  Ok(Json.toJson(journal)) }
   }
   
     def getCurrentDeploys = Action.async {
-  	repo.currentDeploys.map { deploys =>  Ok(Json.toJson(deploys))
-    }
+  	repo.currentDeploys.map { deploys =>  Ok(Json.toJson(deploys)) }
   }
 }
 

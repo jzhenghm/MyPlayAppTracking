@@ -5,9 +5,10 @@ import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 import java.sql.Date
 import play.api.Logger
+import play.api.db.slick
+
 
 import models.{Journal,CurrentDeploy}
-//import models.AppView
 
 import scala.concurrent.{ Future, ExecutionContext }
 
@@ -73,7 +74,24 @@ class JournalRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
       into ((allfields, id) => Journal(allfields._1, allfields._2, allfields._3, allfields._4, allfields._5))
     ) += (entry.app, entry.version, entry.env, entry.username, entry.date)
   }
-
+  
+  /**
+   * Add new journal transaction
+   */
+  def addNewJournal(entry: Journal) = {
+    val dbAction = (
+      for {
+        _ <- ((journal.map(p => (p.app, p.version, p.env, p.username, p.date))
+          returning journal.map(_.id)
+          into ((allfields, id) => Journal(allfields._1, allfields._2, allfields._3, allfields._4, allfields._5))) 
+            += (entry.app, entry.version, entry.env, entry.username, entry.date))
+        _ <- {
+          val q = for { c <- currentDeploy if c.app === entry.app && c.env === entry.env } yield c.version
+          q.update(entry.version)
+        }
+      } yield ()).transactionally
+    db run dbAction
+  }
   
   def updateCurrentDeploy(app:String, env:String, version:String) = db.run{
     Logger.info(s"update: app=$app version=$version env=$env")
@@ -95,6 +113,10 @@ class JournalRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
     journal.result
   }
 
+  /**
+   * Search journal
+   * If the {{{showOption}}} is true for all history else only search journal for current deployment
+   */
   def search(app: Option[String], version: Option[String], env: Option[String], username: Option[String], date: Option[Date], showOption:String): Future[Seq[Journal]] = db.run {
     Logger.info(s"search for: app=$app version=$version env=$env username=$username date=$date")
 

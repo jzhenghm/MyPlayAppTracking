@@ -4,7 +4,7 @@
 @import helper._
 
 	 @form(routes.JournalController.searchJournal()) {
-		@inputText(journal("app"), '_label -> "App", 'placeholder -> "-- all apps --")
+		@inputText(journal("app"), '_label -> "App:", 'placeholder -> "-- all apps --")
 		@inputText(journal("version"), '_label -> "Version:",'placeholder -> "-- all version --")
 		@inputRadioGroup(journal("showOption"), 
 			options = Seq("A"->"all history", "C"->"current"), '_label -> "Show:")
