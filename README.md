@@ -1,10 +1,10 @@
 # App deployment traking #
 
 ## Overview ##
-This is a web-based application to tracing applications deployed in the serveral environment: QA, stage, Labs, Production.
-The application is developed in Scala Playframework.
+This is a web-based application to tracing applications deployed in the serval environment: QA, stage, Labs, Production.
+The application is developed in Scala Play framework.
 
-* Th project is implemented in playframework MVC pattern. The class packages are view, controller, model and data access layer. REST service endpoint is configured in the file `config\routes`
+* Th project is implemented in Play framework MVC pattern. The class packages are view, controller, model and data access layer. REST service endpoint is configured in the file `config\routes`
 * Relational database is the data storage of the application. In the data access layer tables are mapped to Scala collection using Play Slick API.
 * For the demo purpose, I set H2 in-memory database as default configuration. when the application is started up database is initialized and sample data is inserted with Play Evolution. (see the scripts in `config\envolutions\default`)
 
@@ -21,7 +21,7 @@ To package the application executable, run command in play2 console:
 It generates a package `/target/universal/myplay-1.0-SNAPSHOT.zip`.
 
 ## Run Application ##
-The Play2 project includes an embeded webserver - Nettyserver. So we don't need to use any other http server to run this application. The steps to start and test the application are following:
+The Play2 project includes an embed webserver - Nettyserver. So we don't need to use any other http server to run this application. The steps to start and test the application are following:
 1. Unzip the the zip file `myplay-1.0-SNAPSHOT.zip`
 2. the run the shell script `./myplay-1.0-SNAPSHOT/bin/myplay`(run `myplay.bat` in windows environment)
 * Open a web browser enter `http://localhost:9000/` launches the index page of the app.
@@ -45,9 +45,9 @@ url 'http://localhost:9000/journal/add'
 message ({'app' => :app, 'env' => :env, 'version' => :version, 'date' => :date, 'username'=> :uid }.to_json end
 ```
 
-I don't have project setup in Chef server to test this the update. but We can test it on terminal with `curl` command:
+I don't have project setup in Chef server to test deployment update. but We can do it with `curl` command on terminal:
 
 `curl -X POST -H "Content-Type: application/json"
 -d '{"app":"e-commerce web","version":"0.1.2","env":"prod","username":"mack","date":"2016-02-01"}' http://localhost:9000/journal/add`
 
-To check the tracking application updated with the new insertion, we can search current deployment on web interface and we will see the lastest deployment we just added is at the top of search results.
+To check the tracking application updated with the new insertion, we can search current deployment on web interface and we will see the latest deployment we just added is at the top of search results.
