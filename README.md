@@ -42,7 +42,8 @@ To update database automatically the endpoint has to be integrated with deployme
 http_request 'add_deploy' do
 action :post
 url 'http://localhost:9000/journal/add'
-message ({'app' => :app, 'env' => :env, 'version' => :version, 'date' => :date, 'username'=> :uid }.to_json end```
+message ({'app' => :app, 'env' => :env, 'version' => :version, 'date' => :date, 'username'=> :uid }.to_json end
+```
 
 I don't have project setup in Chef server to test this the update. but We can test it on terminal with `curl` command:
 
