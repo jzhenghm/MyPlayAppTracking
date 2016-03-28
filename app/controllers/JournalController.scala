@@ -58,7 +58,7 @@ class JournalController @Inject() (repo: JournalRepository, val messagesApi: Mes
    * }}}
    * 
    */
-  def addJournal = Action(BodyParsers.parse.json) { request =>
+  def addJournal = Action(parse.json) { request =>
     val b = request.body.validate[Journal]
     Logger(s"addJourna called $b")
     b.fold(
@@ -105,6 +105,10 @@ class JournalController @Inject() (repo: JournalRepository, val messagesApi: Mes
 
   } 
   
+//  def searchJournalQurey = Action.async { implicit request =>
+    
+//  }
+  
   /**
    * A REST endpoint that gets all the journal as JSON.
    */
@@ -115,6 +119,14 @@ class JournalController @Inject() (repo: JournalRepository, val messagesApi: Mes
     def getCurrentDeploys = Action.async {
   	repo.currentDeploys.map { deploys =>  Ok(Json.toJson(deploys)) }
   }
+    
+  def  showEnv(env: String) = Action.async {
+     val journals = repo.search(None,None, Some(env), None, None, "A")
+
+        journals.map { x => Ok(views.html.result(journalForm)(x)) }
+    
+  }
+
 }
 
 case class SearchJournalForm(app: String, version: String, env: String, username: String, date: String, showOption: String)

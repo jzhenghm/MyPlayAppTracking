@@ -4,18 +4,31 @@
 @import helper._
 
 	 @form(routes.JournalController.searchJournal()) {
-		@inputText(journal("app"), '_label -> "App:", 'placeholder -> "-- all apps --")
-		@inputText(journal("version"), '_label -> "Version:",'placeholder -> "-- all version --")
+		@inputText(journal("app"), '_label -> "App:", 'placeholder -> "-- all apps --", 'id -> "apptext")
+		@inputText(journal("version"), '_label -> "Version:",'placeholder -> "-- all version --", 'id -> "versiontext" )
 		@inputRadioGroup(journal("showOption"), 
 			options = Seq("A"->"all history", "C"->"current"), '_label -> "Show:")
-		@select(journal("env"), 
+		@select(journal("env"),
 			helper.options(List("prod","stage","qa","labs")),
 			'_label -> "Env.:", 
-			'_default -> "-- all env --")
-		@inputText(journal("username"), '_label -> "Deployer:", 'placeholder -> " --all deployer --")
+			'_default -> "-- all env --", 
+			'id -> "envselect")
+		@inputText(journal("username"), '_label -> "Deployer:", 'placeholder -> " --all deployer --", 'id -> "unametext")
 		@inputText(journal("date"), '_label -> "Date:", 'placeholder -> "-- all date --")
 	
 		<div class="buttons">
 			<input type="submit" value="Search"/>
 		</div>
 	}	
+	<script>
+	
+	$(document).ready(function(){
+		$("#envselect").change(function() { 
+			alert("Text changed to "+$("#envselect").val());
+			});
+	});
+		
+		
+	</script>
+	
+	

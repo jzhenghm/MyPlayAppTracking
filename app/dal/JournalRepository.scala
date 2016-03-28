@@ -120,7 +120,6 @@ class JournalRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   def search(app: Option[String], version: Option[String], env: Option[String], username: Option[String], date: Option[Date], showOption:String): Future[Seq[Journal]] = db.run {
     Logger.info(s"search for: app=$app version=$version env=$env username=$username date=$date")
 
-
     val rst0 = showOption match {
       case "A" => journal
       case _ => for {
