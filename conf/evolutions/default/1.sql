@@ -53,4 +53,4 @@ insert into "current_deploy" VALUES (9,'labs', 'e-commerce web','0.0.9');
 
 
 drop table "journal" if exists;
-drop table "current_deploy"
+drop table "current_deploy" if exists;
